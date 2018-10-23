@@ -352,7 +352,7 @@ function test_het_gewoon(size) {
   xyFactor = 0;
   theSize = size;
   //requestAnimationFrame(doRequestAnimationFrame);
-  setInterval(function(){ testSetInterval(); }, 2000);
+  setInterval(function(){ testSetInterval(); }, 3000);
 }
 
 function solvePuzzel(puzzel, size) {
