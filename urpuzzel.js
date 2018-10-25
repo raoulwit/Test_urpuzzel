@@ -322,27 +322,24 @@ function initSolvePuzzel(codepuzzel, size){
 
 }
 
-
-function doRequestAnimationFrame() {
+function herstel_basis() {
+  clearInterval(theInterval);
+  controlClick = true;
   for(j=1; j<=8; j++) {
-    c2Ar[j].clearRect(-300,-300,2200,1300);
-    c2Ar[j].setTransform(1,0,0,1,beginXY[j][0]+ xyFactor * stapXY[j][0], beginXY[j][1]+ xyFactor * stapXY[j][1]);
-    c2Ar[j].rotate(beginDraai[j]+xyFactor*Math.PI*2/breakCounter);
-    if (dalBerg[j] == 1) {
-      makeBerg(0,0,theSize,[bl,w],legPiece[j],canvasAr[j]); } else {
-      makeDal(0,0,theSize,[bl,w],legPiece[j],canvasAr[j]);
-      }
+    canvas[j].style.opacity = 1;
+    canvasAr[j].style.display = "initial";
   }
-  xyFactor++;
-//  if (xyFactor == 29) { alert(dalBerg)}
-  if (xyFactor <=breakCounter)  {requestAnimationFrame(doRequestAnimationFrame); }
+  initPuzzel(size);
 }
+
+
 
 function testSetInterval() {
 //  c2Ar[0].clearRect(-300,-300,2200,1300);
 //  var s = symmetrie();
 //  makePuzzel(ww2, wh2, s, theSize , canvasAr[0], bl, w);
   for(j=1; j<=8; j++) {
+    canvasAr[j].style.opacity = yMuis/wh2/1.7;
     c2Ar[j].clearRect(-300,-300,2200,1300);
     c2Ar[j].setTransform(1,0,0,1,beginXY[j][0]+ xyFactor * stapXY[j][0], beginXY[j][1]+ xyFactor * stapXY[j][1]);
     c2Ar[j].rotate(beginDraai[j]+xyFactor*Math.PI*2/breakCounter);
@@ -353,16 +350,20 @@ function testSetInterval() {
     }
   var plusFactor = Math.floor(xMuis/ww2*5);
   if (xyFactor + plusFactor > breakCounter) {
+    setTimeout(herstel_basis,2500);
     xyFactor = breakCounter } else {
       xyFactor += plusFactor
     }
-  if (xyFactor > breakCounter ) { clearInterval(theInterval)}
+  if (xyFactor > breakCounter ) {
+    clearInterval(theInterval);
+  }
 }
 
 function test_het_gewoon(size) {
   for(i=1; i<=8; i++) {
+
     stapXY[i] = [(eindXY[i][0]-beginXY[i][0])/breakCounter , (eindXY[i][1]-beginXY[i][1])/breakCounter]
-    canvasAr[i].style.opacity = 0.6;
+    canvasAr[i].style.opacity = yMuis/wh2;
   }
   xyFactor = 0;
   theSize = size;
@@ -370,15 +371,38 @@ function test_het_gewoon(size) {
   theInterval = setInterval(function(){ testSetInterval(); }, 0);
 }
 
+
 function solvePuzzel(puzzel, size) {
-  breakCounter = 450;
+  breakCounter = 850;
   var i = 5;
   var j = 6;
   document.getElementById("text").value = puzzel;
 
   initPuzzel(size);
   initSolvePuzzel(puzzel, size);
+  controleer_omdraai();
+
   test_het_gewoon(size);
+}
+
+function controleer_omdraai() {
+  if (eindXY[7][0]>ww2) {
+    var h = eindXY[7];
+    eindXY[7] = eindXY[8];
+    eindXY[8] = h;
+    h = canvasAr[7].style.zIndex;
+    canvasAr[7].style.zIndex = canvasAr[8].style.zIndex;
+    canvasAr[8].style.zIndex = h;
+    h = legPiece[7];
+    legPiece[7] = legPiece[8];
+    legPiece[8] = h;
+    h = beginDraai[7];
+    beginDraai[7] = beginDraai[8];
+    beginDraai[8] = h;
+    h = dalBerg[7];
+    dalBerg[7] = dalBerg[8];
+    dalBerg[8] = h;
+  }
 }
 
 function clickDone() {
